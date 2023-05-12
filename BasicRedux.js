@@ -1,38 +1,66 @@
 import { createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
+import thunk from "redux-thunk";
+import axios from "axios";
 
 // **ACTIONS CONSTANTS
 const INCREMENT = "increment";
 const DECREMENT = "decrement";
 const INCREMENTBYAMOUNT = "incrementByAmount";
+const USERDETAILS = "userDetails";
 
 // ** STORE
-const store = createStore(reducer, applyMiddleware(logger.default));
+const store = createStore(
+  reducer,
+  applyMiddleware(logger.default, thunk.default)
+);
 
-// **THIS IS FOR GETTING THE PREVIOUS VALUSE
+// **THIS IS FOR GETTING THE PREVIOUS VALUE
 const history = [];
 function reducer(state = { amount: 1 }, action) {
-  if (action.type === INCREMENT) {
-    return {
-      amount: state.amount + 1,
-    };
-  }
-  if (action.type === DECREMENT) {
-    return {
-      amount: state.amount - 1,
-    };
-  }
+  switch (action.type) {
+    case USERDETAILS:
+      return {
+        amount: action.payload,
+      };
+    case INCREMENT:
+      return {
+        amount: state.amount + 1,
+      };
+    case DECREMENT:
+      return {
+        amount: state.amount - 1,
+      };
 
-  if (action.type === INCREMENTBYAMOUNT) {
-    return {
-      amount: state.amount + action.payload,
-    };
+    case INCREMENTBYAMOUNT:
+      return {
+        amount: state.amount + action.payload,
+      };
+    default:
+      state;
   }
-
-  return state;
 }
 
 // **ACTIONS CREATOR
+// ? API CALLING
+//async function getUser(dispatch, getState) {
+//   const { data } = await axios.get(`http://localhost:3000/accounts/1`);
+//   dispatch({ type: USERDETAILS, payload: data.amount });
+// }
+
+// ! Dispatch and getState is comes from redux thunk
+// ** if we want data according to id
+function getUser(id) {
+  return async (dispatch, getState) => {
+    const { data } = await axios.get(`http://localhost:3000/accounts/${id}`);
+    dispatch(initUser(data.amount));
+  };
+}
+
+function initUser(value) {
+  return { type: USERDETAILS, payload: value };
+}
+
 function increment() {
   return { type: INCREMENT };
 }
@@ -62,6 +90,12 @@ function incrementByAmount(value) {
 //   console.log(store.getState());
 // });
 
-setInterval(() => {
-  store.dispatch(increment());
-}, 2000);
+// ? CALLING THE DIRECT FUNCTION WHICH GIVES THE RESPONSE OF THE OBJECT
+// setTimeout(() => {
+//     store.dispatch(getUser());
+//   }, 2000);
+
+// ? CALLING THE FUNCTION WHICH USE THE REDUX THUNK
+// setTimeout(() => {
+store.dispatch(getUser(1));
+// }, 2000);
