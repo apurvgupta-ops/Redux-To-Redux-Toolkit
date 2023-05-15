@@ -1,6 +1,6 @@
 // **Pure Redux
 import axios from "axios";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
 
@@ -18,6 +18,15 @@ const store = createStore(
   reducers,
   applyMiddleware(logger.default, thunk.default)
 );
+
+// ?Combine Reducers
+// const store = createStore(
+//     combineReducers({
+//        amount : amountReducer,
+//        bonus : amountReducer,
+//    })
+//     applyMiddleware(logger.default, thunk.default)
+//   );
 
 // ?For showing previous values
 const history = [];
@@ -77,7 +86,7 @@ function getUserDataFulfilled(value) {
   return { type: USERDATAFULFILLED, payload: value };
 }
 function getUserDataFailed(error) {
-  return { type: USERDATAFAILED, error: value };
+  return { type: USERDATAFAILED, error: error };
 }
 
 // ?Subscribe = Subscribe functions call only when there is any change.
