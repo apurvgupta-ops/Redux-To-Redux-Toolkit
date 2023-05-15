@@ -8,7 +8,10 @@ import thunk from "redux-thunk";
 const INC = "increment";
 const DEC = "decrement";
 const INCBYAMT = "incByAmt";
-const USERDATA = "userData";
+// const USERDATA = "userData"; // For Checking
+const USERDATAPENDING = "userDataPending";
+const USERDATAFULFILLED = "userDataFulfilled";
+const USERDATAFAILED = "userDataFailed";
 
 // ?Store
 const store = createStore(
@@ -28,8 +31,15 @@ function reducers(state = { amount: 10 }, action) {
       return { amount: state.amount - 5 };
     case INCBYAMT:
       return { amount: state.amount + action.payload };
-    case USERDATA:
-      return { amount: action.payload + state.amount };
+    // case USERDATA:
+    //   return { amount: action.payload + state.amount };
+    case USERDATAPENDING:
+      return { ...state, pending: true };
+    case USERDATAFULFILLED:
+      return { amount: action.payload + state.amount, pending: false };
+    case USERDATAFAILED:
+      return { ...state, error: action.payload, pending: true };
+
     default:
       return state;
   }
@@ -40,11 +50,12 @@ function reducers(state = { amount: 10 }, action) {
 function userData(id) {
   return async (dispatch, getState) => {
     try {
+      dispatch(getUserDataPending());
       const { data } = await axios.get(`http://localhost:3000/accounts/${id}`);
-      dispatch(initUser(data.amount));
+      dispatch(getUserDataFulfilled(data.amount));
       // console.log("22", getState());
     } catch (error) {
-      console.log(error);
+      dispatch(getUserDataFailed(error.message));
     }
   };
 }
@@ -59,8 +70,14 @@ function decrement() {
 function incrementByAmount(value) {
   return { type: INCBYAMT, payload: value };
 }
-function initUser(value) {
-  return { type: USERDATA, payload: value };
+function getUserDataPending() {
+  return { type: USERDATAPENDING };
+}
+function getUserDataFulfilled(value) {
+  return { type: USERDATAFULFILLED, payload: value };
+}
+function getUserDataFailed(error) {
+  return { type: USERDATAFAILED, error: value };
 }
 
 // ?Subscribe = Subscribe functions call only when there is any change.
