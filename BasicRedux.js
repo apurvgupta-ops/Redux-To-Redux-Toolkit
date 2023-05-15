@@ -1,101 +1,104 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, combineReducers } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
 import axios from "axios";
 
-// **ACTIONS CONSTANTS
-const INCREMENT = "increment";
-const DECREMENT = "decrement";
-const INCREMENTBYAMOUNT = "incrementByAmount";
-const USERDETAILS = "userDetails";
-
-// ** STORE
+//action name constants
+// const init = 'account/init';
+const inc = "account/increment";
+const dec = "account/decrement";
+const incByAmt = "account/incrementByAmount";
+const getAccUserPending = "account/getUser/pending";
+const getAccUserFulFilled = "account/getUser/fulfilled";
+const getAccUserRejected = "account/getUser/rejected";
+const incBonus = "bonus/increment";
+//store
 const store = createStore(
-  reducer,
+  combineReducers({
+    account: accountReducer,
+    bonus: bonusReducer,
+  }),
   applyMiddleware(logger.default, thunk.default)
 );
 
-// **THIS IS FOR GETTING THE PREVIOUS VALUE
 const history = [];
-function reducer(state = { amount: 1 }, action) {
-  switch (action.type) {
-    case USERDETAILS:
-      return {
-        amount: action.payload,
-      };
-    case INCREMENT:
-      return {
-        amount: state.amount + 1,
-      };
-    case DECREMENT:
-      return {
-        amount: state.amount - 1,
-      };
 
-    case INCREMENTBYAMOUNT:
-      return {
-        amount: state.amount + action.payload,
-      };
+//reducer
+
+function accountReducer(state = { amount: 1 }, action) {
+  switch (action.type) {
+    case getAccUserFulFilled:
+      return { amount: action.payload, pending: false };
+    case getAccUserRejected:
+      return { ...state, error: action.error, pending: false };
+    case getAccUserPending:
+      return { ...state, pending: true };
+    case inc:
+      return { amount: state.amount + 1 };
+    case dec:
+      return { amount: state.amount - 1 };
+    case incByAmt:
+      return { amount: state.amount + action.payload };
     default:
-      state;
+      return state;
   }
 }
 
-// **ACTIONS CREATOR
-// ? API CALLING
-//async function getUser(dispatch, getState) {
-//   const { data } = await axios.get(`http://localhost:3000/accounts/1`);
-//   dispatch({ type: USERDETAILS, payload: data.amount });
-// }
-
-// ! Dispatch and getState is comes from redux thunk
-// ** if we want data according to id
-function getUser(id) {
-  return async (dispatch, getState) => {
-    const { data } = await axios.get(`http://localhost:3000/accounts/${id}`);
-    dispatch(initUser(data.amount));
-  };
+function bonusReducer(state = { points: 0 }, action) {
+  switch (action.type) {
+    case incBonus:
+      return { points: state.points + 1 };
+    case incByAmt:
+      if (action.payload >= 100) return { points: state.points + 1 };
+    default:
+      return state;
+  }
 }
 
-function initUser(value) {
-  return { type: USERDETAILS, payload: value };
+//global state
+
+// store.subscribe(() => {
+//   history.push(store.getState());
+//   console.log(history);
+// });
+
+//Action creators
+function getUserAccount(id) {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(getAccountUserPending());
+      const { data } = await axios.get(`http://localhost:3000/accounts/${id}`);
+      dispatch(getAccountUserFulFilled(data.amount));
+    } catch (error) {
+      dispatch(getAccountUserRejected(error.message));
+    }
+  };
+}
+function getAccountUserFulFilled(value) {
+  return { type: getAccUserFulFilled, payload: value };
+}
+function getAccountUserRejected(error) {
+  return { type: getAccUserRejected, error: error };
+}
+function getAccountUserPending() {
+  return { type: getAccUserPending };
 }
 
 function increment() {
-  return { type: INCREMENT };
+  return { type: inc };
 }
 function decrement() {
-  return { type: DECREMENT };
+  return { type: dec };
 }
 function incrementByAmount(value) {
-  return { type: INCREMENTBYAMOUNT, payload: value };
+  return { type: incByAmt, payload: value };
+}
+function incrementBonus(value) {
+  return { type: incBonus };
 }
 
-// **Global state = getState()
-// console.log(store.getState());
-
-// **ACTION TYPES
-// {
-//   type: "increment";
-// }
-
-// **THIS IS FOR PERFORM THE ACTION TYPES
-// store.dispatch({ type: "increment" });
-
-// console.log(store.getState());
-
-// **THIS IS USED TO CALL ACTION WHEN EVER THE STATE GET CHANGED
-// store.subscribe(() => {
-//   //   history.push(store.getState());
-//   console.log(store.getState());
-// });
-
-// ? CALLING THE DIRECT FUNCTION WHICH GIVES THE RESPONSE OF THE OBJECT
-// setTimeout(() => {
-//     store.dispatch(getUser());
-//   }, 2000);
-
-// ? CALLING THE FUNCTION WHICH USE THE REDUX THUNK
-// setTimeout(() => {
-store.dispatch(getUser(1));
-// }, 2000);
+setTimeout(() => {
+  store.dispatch(getUserAccount(2));
+  // store.dispatch(incrementByAmount(200))
+  // store.dispatch(incrementBonus());
+}, 2000);
