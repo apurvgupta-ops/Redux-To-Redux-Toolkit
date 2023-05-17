@@ -1,10 +1,16 @@
 import { useState } from "react";
-import { Increment, Decrement, IncrementByAmount } from "../Redux/actions";
+import {
+  Increment,
+  Decrement,
+  IncrementByAmount,
+  userData,
+} from "../Redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Account = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state.account);
+  //   const realBalance = useSelector((state) => state.balance);
 
   // * Increment without redux
   const [value, setValue] = useState(0);
@@ -24,14 +30,21 @@ const Account = () => {
       <div className="container">
         <div className="account">
           <h4>Account Component</h4>
+          <h5>New Balance : {account}</h5>
           <h5>Amount : {account}</h5>
           <div className="btn">
             <button onClick={() => dispatch(Increment())}>Increment</button>
-            <button onClick={() => dispatch(Decrement())}>Decrement</button>
+            <button
+              onClick={() => dispatch(Decrement())}
+              disabled={account <= 0}
+            >
+              Decrement
+            </button>
             <input type="number" onChange={(e) => setValue(+e.target.value)} />
             <button onClick={() => dispatch(IncrementByAmount(value))}>
               Increment By Amount
             </button>
+            <button onClick={() => dispatch(userData)}>Real Balance</button>
           </div>
         </div>
       </div>
