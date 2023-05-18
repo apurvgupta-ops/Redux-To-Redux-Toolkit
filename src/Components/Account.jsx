@@ -14,6 +14,7 @@ import {
 
 const Account = () => {
   const dispatch = useDispatch();
+  //   const amount =    "";
   const amount = useSelector((state) => state.account.amount);
   //   const realBalance = useSelector((state) => state.balance);
   // * Increment without redux

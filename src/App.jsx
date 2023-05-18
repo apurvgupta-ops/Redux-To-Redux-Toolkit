@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Bouns from "./Components/Bonus";
 
 const App = () => {
-  const realBalance = useSelector((state) => state.reducer);
+  const realBalance = useSelector((state) => state.account.amount);
   // const realBalance = 0;
 
   return (
