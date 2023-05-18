@@ -6,8 +6,7 @@ const Bouns = () => {
   const dispatch = useDispatch();
   //   const Points = 0;
   const Points = useSelector((state) => state.bonus.points);
-  console.log(Points);
-  //   const realBalance = useSelector((state) => state.balance);
+
   // * Increment without redux
   const [value, setValue] = useState(0);
   return (
