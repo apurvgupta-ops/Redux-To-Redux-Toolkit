@@ -1,12 +1,11 @@
+import { createSlice } from "@reduxjs/toolkit";
 import * as constant from "./constants";
 
-// ?Initial state
-export const InitialState = {
-  account: 0,
-  balance: 0,
+export const initialState = {
+  amount: 90,
 };
 
-export const accountReducer = (state = InitialState, action) => {
+export const accountReducer = (state = initialState, action) => {
   switch (action.type) {
     case constant.INC:
       return { account: state.account + 1 };

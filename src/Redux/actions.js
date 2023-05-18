@@ -23,8 +23,7 @@ export const userDataFailed = (error) => {
   return { type: constant.USERDATAFAILED, error: error };
 };
 
-// ? API Calling
-
+// ? API Callings
 export const userData = async (dispatch, getState) => {
   try {
     dispatch(userDataPending());

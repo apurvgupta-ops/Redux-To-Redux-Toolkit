@@ -1,17 +1,21 @@
 import { useState } from "react";
+// import {
+//   Increment,
+//   Decrement,
+//   IncrementByAmount,
+//   userData,
+// } from "../Redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Increment,
   Decrement,
   IncrementByAmount,
-  userData,
-} from "../Redux/actions";
-import { useDispatch, useSelector } from "react-redux";
+} from "../ReduxToolkit/toolkitReducer";
 
 const Account = () => {
   const dispatch = useDispatch();
-  const account = useSelector((state) => state.account);
+  const amount = useSelector((state) => state.account.amount);
   //   const realBalance = useSelector((state) => state.balance);
-
   // * Increment without redux
   const [value, setValue] = useState(0);
   //   const [count, setCount] = useState(0);
@@ -30,13 +34,13 @@ const Account = () => {
       <div className="container">
         <div className="account">
           <h4>Account Component</h4>
-          <h5>New Balance : {account}</h5>
-          <h5>Amount : {account}</h5>
+          <h5>New Balance : {amount}</h5>
+          <h5>Amount : {amount}</h5>
           <div className="btn">
             <button onClick={() => dispatch(Increment())}>Increment</button>
             <button
               onClick={() => dispatch(Decrement())}
-              disabled={account <= 0}
+              disabled={amount <= 0}
             >
               Decrement
             </button>
