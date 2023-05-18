@@ -1,3 +1,4 @@
+// * Redux toolkit automatically create action cretors and action constants
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -7,6 +8,7 @@ export const initialState = {
 };
 
 // ? API Calling
+// * we can make saperate file for action also.
 export const userAccountBalance = createAsyncThunk(
   "users/accountDetails",
   async (userId, thunkAPI) => {
@@ -56,5 +58,3 @@ export const accountReducerToolkit = createSlice({
 export const { Increment, Decrement, IncrementByAmount } =
   accountReducerToolkit.actions;
 export default accountReducerToolkit.reducer;
-
-// * Redux toolkit automatically create action cretors and action constants

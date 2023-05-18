@@ -10,6 +10,7 @@ import thunk from "redux-thunk";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { accountReducerToolkit } from "./ReduxToolkit/toolkitReducer.js";
 import { bounsReducerToolkit } from "./ReduxToolkit/bonusReducer.js";
+import { adminApi } from "./ReduxToolkit/AdminReducer.js";
 
 // const store = createStore(accountReducer, applyMiddleware(logger, thunk));
 // const rootReducer = combineReducers({
@@ -21,7 +22,11 @@ const store = configureStore({
   reducer: {
     account: accountReducerToolkit.reducer,
     bonus: bounsReducerToolkit.reducer,
+    // ? Redux Toolkit query
+    [adminApi.reducerPath]: adminApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(adminApi.middleware),
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
