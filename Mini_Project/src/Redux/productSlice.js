@@ -1,32 +1,35 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { fetchProducts } from "./productApi";
 
-export const initialState = {
+const initialState = {
   products: [],
+  status: "idle",
 };
 
-export const productDetails = createAsyncThunk(
-  "fetch/products",
-  async (userId, thunkAPI) => {
-    try {
-      const { data } = await axios.get(`https://dummyjson.com/products`);
-      return data;
-    } catch (error) {
-      return error.message;
-    }
+export const fetchAsync = createAsyncThunk(
+  "products/fetchProduct",
+  async () => {
+    const response = await fetchProducts();
+    return response.data;
   }
 );
 
-export const productSlice = createSlice({
+export const productsSlice = createSlice({
   name: "products",
   initialState,
-
-  extraReducers: (callback) => {
-    callback.addCase(productDetails.fulfilled, (state, action) => {
-      state.products = action.payload;
-    });
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.products = action.payload;
+      });
   },
 });
 
-// export const {productDetails} = productSlice.actions
-export default productSlice.reducer;
+// export const { } = productsSlice.actions;
+
+export default productsSlice.reducer;
