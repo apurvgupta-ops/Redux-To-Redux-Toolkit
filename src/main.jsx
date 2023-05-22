@@ -10,7 +10,7 @@ import thunk from "redux-thunk";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { accountReducerToolkit } from "./ReduxToolkit/toolkitReducer.js";
 import { bounsReducerToolkit } from "./ReduxToolkit/bonusReducer.js";
-import { adminApi } from "./ReduxToolkit/AdminReducer.js";
+import { adminApi } from "./api/AdminReducer.js";
 
 // const store = createStore(accountReducer, applyMiddleware(logger, thunk));
 // const rootReducer = combineReducers({

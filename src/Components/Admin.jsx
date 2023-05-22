@@ -6,7 +6,7 @@ import {
   useDeleteAccountMutation,
   useGetAccountsQuery,
   useUpdateAccountMutation,
-} from "../ReduxToolkit/AdminReducer";
+} from "../api/AdminReducer";
 
 const Admin = () => {
   const { data, error, isLoading } = useGetAccountsQuery();
