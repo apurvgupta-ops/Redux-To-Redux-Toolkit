@@ -12,8 +12,8 @@ const Products = () => {
   }, []);
 
   return (
-    <div>
-      <div>
+    <div className={styles.container}>
+      <div className={styles.inner_container}>
         {products.map((product) => (
           <div className={styles.card}>
             <img
@@ -25,9 +25,7 @@ const Products = () => {
             <p className={styles.price}>${product.price}</p>
             <p>{product.description}</p>
             <p>
-              <button onClick={() => dispatch(addAsync(product))}>
-                Add to Cart
-              </button>
+              <button>Add to Cart</button>
             </p>
           </div>
         ))}

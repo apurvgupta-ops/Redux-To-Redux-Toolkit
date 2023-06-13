@@ -18,8 +18,8 @@ export const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
-    builder
+  extraReducers: (callback) => {
+    callback
       .addCase(fetchAsync.pending, (state) => {
         state.status = "loading";
       })

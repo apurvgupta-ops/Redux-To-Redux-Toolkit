@@ -554,21 +554,5 @@
       }
     ],
     "cart": [
-      {
-        "id": 1,
-        "title": "iPhone 9",
-        "brand": "Apple",
-        "thumbnail": "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-        "price": 549,
-        "quantity": 1
-      },
-      {
-        "id": 4,
-        "title": "OPPOF19",
-        "brand": "OPPO",
-        "thumbnail": "https://i.dummyjson.com/data/products/4/thumbnail.jpg",
-        "price": 280,
-        "quantity": 1
-      }
     ]
   }
