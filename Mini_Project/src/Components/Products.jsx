@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAsync } from "../Redux/productSlice";
 import styles from "./Products.module.css";
+import { addCartItems } from "../Redux/Cart/cartSlice";
 
 const Products = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products);
-  console.log(products);
+  // console.log(products);
   useEffect(() => {
     dispatch(fetchAsync());
   }, []);
@@ -25,7 +26,9 @@ const Products = () => {
             <p className={styles.price}>${product.price}</p>
             <p>{product.description}</p>
             <p>
-              <button>Add to Cart</button>
+              <button onClick={() => dispatch(addCartItems(product))}>
+                Add to Cart
+              </button>
             </p>
           </div>
         ))}
